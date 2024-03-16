@@ -36,3 +36,46 @@ export const signin = catchAsyncError(async (req, res, next) => {
     .status(200)
     .json(restUserInfo);
 });
+
+export const google = catchAsyncError(async (req, res, next) => {
+  const { name, email, photo } = req.body;
+
+  const user = await User.findOne({ email });
+
+  if (user) {
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+    const { password: pass, ...restUserInfo } = user._doc;
+
+    res
+      .cookie("access-token", token, {
+        httpOnly: true,
+      })
+      .status(200)
+      .json(restUserInfo);
+  } else {
+    const generatedPassword =
+      Math.random().toString(36).slice(-8) +
+      Math.random().toString(36).slice(-8); // Generate Random Password for google login because password is required in schema
+    const hashedPassword = bcrypt.hashSync(generatedPassword, 10);
+    const newUser = new User({
+      username:
+        name.split(" ").join("").toLowerCase() +
+        Math.random().toString(36).slice(-4), // creating random username by joining display name coming from google login as username is unique in schema
+      email,
+      password: hashedPassword,
+      avatar: photo,
+    });
+    await newUser.save();
+
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+    const { password: pass, ...restUserInfo } = user._doc;
+
+    res
+      .cookie("access-token", token, {
+        httpOnly: true,
+      })
+      .status(200)
+      .json(restUserInfo);
+    w;
+  }
+});
