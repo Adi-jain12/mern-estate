@@ -7,6 +7,7 @@ const globalErrorHandler = (err, req, res, next) => {
     error: err,
     message: err.message,
     stack: err.stack,
+    success: false,
   });
 
   console.log(err.stack);
