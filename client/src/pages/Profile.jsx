@@ -92,7 +92,7 @@ const Profile = () => {
     }
   };
 
-  const handleDeleteAccount = async (e) => {
+  const handleDeleteAccount = async () => {
     try {
       dispatch(deleteUserStart());
 

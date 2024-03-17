@@ -47,7 +47,7 @@ export const google = catchAsyncError(async (req, res, next) => {
     const { password: pass, ...restUserInfo } = user._doc;
 
     res
-      .cookie("access-token", token, {
+      .cookie("access_token", token, {
         httpOnly: true,
       })
       .status(200)
