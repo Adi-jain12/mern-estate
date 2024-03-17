@@ -4,7 +4,7 @@ import catchAsyncError from "../utils/catchAsyncError.js";
 import AppError from "../utils/appError.js";
 import jwt from "jsonwebtoken";
 
-export const signup = catchAsyncError(async (req, res, next) => {
+export const signUp = catchAsyncError(async (req, res, next) => {
   const { username, email, password } = req.body;
   const hashedPassword = bcrypt.hashSync(password, 10);
 
@@ -18,7 +18,7 @@ export const signup = catchAsyncError(async (req, res, next) => {
   res.status(201).json("User created successfully!");
 });
 
-export const signin = catchAsyncError(async (req, res, next) => {
+export const signIn = catchAsyncError(async (req, res, next) => {
   const { email, password } = req.body;
 
   const validUser = await User.findOne({ email });
@@ -78,4 +78,10 @@ export const google = catchAsyncError(async (req, res, next) => {
       .json(restUserInfo);
     w;
   }
+});
+
+export const signOut = catchAsyncError(async (req, res, next) => {
+  res.clearCookie("access_token");
+
+  res.status(200).json("User has been logged out!");
 });
