@@ -28,3 +28,12 @@ export const updateUser = catchAsyncError(async (req, res, next) => {
 
   res.status(200).json(restUserInfo);
 });
+
+export const deleteUser = catchAsyncError(async (req, res, next) => {
+  if (req.user.id !== req.params.id)
+    return next(new AppError("You can only delete your account!", 401));
+
+  await User.findByIdAndDelete(req.params.id);
+  res.clearCookie("access_token");
+  res.status(200).json({ message: "User has been deleted!" });
+});
