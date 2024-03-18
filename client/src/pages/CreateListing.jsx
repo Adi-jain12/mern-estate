@@ -1,6 +1,13 @@
-import React from "react";
+import { useState } from "react";
 
 const CreateListing = () => {
+  const [files, setFiles] = useState([]);
+
+  // const handleImageSubmit = (e) => {
+  //   if (files.length > 0 && files.length < 7) {
+  //   }
+  // };
+
   return (
     <main className="p-3 max-w-4xl mx-auto">
       <h1 className="text-center font-semibold text-3xl my-7">
@@ -120,8 +127,13 @@ const CreateListing = () => {
               id="images"
               accept="images/*"
               multiple
+              onChange={(e) => setFiles(e.target.files)}
             />
-            <button className="p-3 text-green-700 border border-green-700 rounded uppercase hover:shadow-lg disabled:opacity-80">
+            <button
+              type="button"
+              onClick={handleImageSubmit}
+              className="p-3 text-green-700 border border-green-700 rounded uppercase hover:shadow-lg disabled:opacity-80"
+            >
               Upload
             </button>
           </div>
