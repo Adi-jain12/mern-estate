@@ -21,6 +21,7 @@ import {
 } from "../redux/user/userSlice.js";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
+import UserListings from "../components/UserListings.jsx";
 
 const Profile = () => {
   const fileRef = useRef();
@@ -28,8 +29,12 @@ const Profile = () => {
   const { currentUser, isLoading, error } = useSelector((state) => state.user);
   const [filePerc, setFilePerc] = useState(0);
   const [fileUploadError, setFileUploadError] = useState(false);
+  const [viewListingsError, setViewListingsError] = useState(false);
   const [formData, setFormData] = useState({});
   const [successMessage, setSuccessMessage] = useState(false);
+  const [isViewListings, setIsViewListings] = useState([]);
+  // const [openCloseListings, setOpenCloseListings] = useState(false);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -132,6 +137,23 @@ const Profile = () => {
     }
   };
 
+  const handleViewListings = async () => {
+    try {
+      setViewListingsError(false);
+      const res = await fetch(`/api/user/getlistings/${currentUser._id}`);
+
+      const data = await res.json();
+      setIsViewListings(data);
+
+      if (data.success === false) {
+        setViewListingsError(true);
+        return;
+      }
+    } catch (error) {
+      setViewListingsError(true);
+    }
+  };
+
   return (
     <div className="p-3 max-w-lg mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
@@ -217,6 +239,17 @@ const Profile = () => {
       <p className="text-green-700 text-center">
         {successMessage ? "User updated successfully" : ""}
       </p>
+      <div className="text-center">
+        <button onClick={handleViewListings} className="text-green-700 ">
+          View Listings
+        </button>
+        <p className="text-red-700 text-center mt-5">
+          {viewListingsError ? "Error viewing listings" : ""}
+        </p>
+      </div>
+      {isViewListings && isViewListings.length > 0 && (
+        <UserListings isViewListings={isViewListings} />
+      )}
     </div>
   );
 };
