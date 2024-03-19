@@ -6,3 +6,18 @@ export const createListing = catchAsyncError(async (req, res, next) => {
 
   return res.status(201).json(listing);
 });
+
+export const deleteListing = catchAsyncError(async (req, res, next) => {
+  const listing = await Listing.findById(req.params.id);
+
+  if (!listing) {
+    return next(new AppError("Listing not found!", 404));
+  }
+  if (req.user.id !== listing.userRef) {
+    return next(new AppError("No permission to delete the listing!", 401));
+  }
+
+  await Listing.findByIdAndDelete(req.params.id);
+
+  res.status(200).json({ message: "Listing has been deleted!" });
+});

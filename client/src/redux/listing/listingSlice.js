@@ -12,6 +12,6 @@ const listingSlice = createSlice({
   reducers: {},
 });
 
-export const {} = listingSlice.actions;
+// export const {} = listingSlice.actions;
 
 export default listingSlice.reducer;

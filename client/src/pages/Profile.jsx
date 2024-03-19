@@ -248,7 +248,10 @@ const Profile = () => {
         </p>
       </div>
       {isViewListings && isViewListings.length > 0 && (
-        <UserListings isViewListings={isViewListings} />
+        <UserListings
+          isViewListings={isViewListings}
+          setIsViewListings={setIsViewListings}
+        />
       )}
     </div>
   );

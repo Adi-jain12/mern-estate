@@ -1,8 +1,24 @@
-import React from "react";
 import { Link } from "react-router-dom";
 
-const UserListings = ({ isViewListings }) => {
-  //   console.log("isViewListings", isViewListings);
+const UserListings = ({ isViewListings, setIsViewListings }) => {
+  // console.log("isViewListings", isViewListings);
+
+  const handleDeleteListing = async (listingId) => {
+    const res = await fetch(`api/listing/deleteListing/${listingId}`, {
+      method: "DELETE",
+    });
+
+    const data = await res.json();
+
+    if (data.success === false) {
+      return;
+    }
+
+    setIsViewListings((prev) =>
+      prev.filter((listing) => listing._id !== listingId)
+    );
+  };
+
   return (
     <div className="flex flex-col gap-4">
       <h1 className="text-center mt-7 text-2xl font-semibold">
@@ -30,7 +46,10 @@ const UserListings = ({ isViewListings }) => {
           </Link>
 
           <div className="flex flex-col items-center">
-            <button className="text-white uppercase bg-red-500 rounded-lg p-1 hover:opacity-75">
+            <button
+              onClick={() => handleDeleteListing(list._id)}
+              className="text-white uppercase bg-red-500 rounded-lg p-1 hover:opacity-75"
+            >
               <span>Delete</span>
             </button>
 
