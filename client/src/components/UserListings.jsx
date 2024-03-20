@@ -19,6 +19,18 @@ const UserListings = ({ isViewListings, setIsViewListings }) => {
     );
   };
 
+  // const handleEditListing = async (listingId) => {
+  //   const res = await fetch(`api/listing/editListing/${listingId}`, {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify(res),
+  //   });
+
+  //   const data = await res.json();
+  // };
+
   return (
     <div className="flex flex-col gap-4">
       <h1 className="text-center mt-7 text-2xl font-semibold">
@@ -53,9 +65,14 @@ const UserListings = ({ isViewListings, setIsViewListings }) => {
               <span>Delete</span>
             </button>
 
-            <button className="text-green-700 uppercase rounded-lg p-1 hover:opacity-75">
-              <span>Edit</span>
-            </button>
+            <Link to={`/update-listing/${list._id}`}>
+              <button
+                // onClick={() => handleEditListing(list._id)}
+                className="text-green-700 uppercase rounded-lg p-1 hover:opacity-75"
+              >
+                <span>Edit</span>
+              </button>
+            </Link>
           </div>
         </div>
       ))}

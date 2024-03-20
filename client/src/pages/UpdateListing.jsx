@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   getDownloadURL,
   getStorage,
@@ -7,10 +7,11 @@ import {
 } from "firebase/storage";
 import { app } from "../firebase";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
-const CreateListing = () => {
+const UpdateListing = () => {
   const navigate = useNavigate();
+  const params = useParams();
   const { currentUser } = useSelector((state) => state.user);
   const [files, setFiles] = useState([]);
   const [formData, setFormData] = useState({
@@ -32,7 +33,19 @@ const CreateListing = () => {
   const [error, setError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  console.log("Formmmmmmm", formData);
+  //   console.log("Formmmmmmm", formData);
+
+  useEffect(() => {
+    const fetchListing = async () => {
+      const listingId = params.listingId;
+      const res = await fetch(`/api/listing/get/${listingId}`);
+      const data = await res.json();
+
+      setFormData(data);
+    };
+
+    fetchListing();
+  }, []);
 
   const handleImageSubmit = (e) => {
     setUploading(true);
@@ -62,6 +75,7 @@ const CreateListing = () => {
           ? "Please select atleast one image to upload!"
           : "You can only upload 6 images per listing!"
       );
+
       setUploading(false);
     }
   };
@@ -141,7 +155,7 @@ const CreateListing = () => {
       setIsLoading(true);
       setError(false);
 
-      const res = await fetch(`/api/listing/create`, {
+      const res = await fetch(`/api/listing/update/${params.listingId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -169,7 +183,7 @@ const CreateListing = () => {
   return (
     <main className="p-3 max-w-4xl mx-auto">
       <h1 className="text-center font-semibold text-3xl my-7">
-        Create Listings
+        Update Listings
       </h1>
       <form
         onSubmit={handleFormSubmit}
@@ -375,7 +389,7 @@ const CreateListing = () => {
             disabled={isLoading || uploading}
             className="p-3 bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 disabled:opacity-80"
           >
-            {isLoading ? "Creating" : "Create Listing"}
+            {isLoading ? "Updating" : "Update Listing"}
           </button>
           <p className="text-red-700 text-sm text-center">{error && error}</p>
         </div>
@@ -384,4 +398,4 @@ const CreateListing = () => {
   );
 };
 
-export default CreateListing;
+export default UpdateListing;

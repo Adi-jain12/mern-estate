@@ -4,11 +4,13 @@ import {
   createListing,
   deleteListing,
   editListing,
+  getListing,
 } from "../controllers/listing.controller.js";
 
 const router = express.Router();
 
 router.post("/create", verifyToken, createListing);
 router.delete("/deleteListing/:id", verifyToken, deleteListing);
-router.post("/editListing/:id", verifyToken, editListing);
+router.post("/update/:id", verifyToken, editListing);
+router.get("/get/:id", getListing);
 export default router;

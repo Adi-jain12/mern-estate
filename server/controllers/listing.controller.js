@@ -38,3 +38,13 @@ export const editListing = catchAsyncError(async (req, res, next) => {
 
   res.status(200).json(updatedListing);
 });
+
+export const getListing = catchAsyncError(async (req, res, next) => {
+  const listing = await Listing.findById(req.params.id);
+
+  if (!listing) {
+    return next(new AppError("No listing found!", 401));
+  }
+
+  res.status(200).json(listing);
+});
